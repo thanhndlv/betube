@@ -1,0 +1,193 @@
+<!-- Begin Carousel -->
+<ngb-carousel *ngIf="images">
+    <ng-template ngbSlide>
+        <div class="picsum-img-wrapper">
+            <img [src]="images[0]" alt="Frozen 2" class="img img-fluid w-100">
+        </div>
+    </ng-template>
+    <ng-template ngbSlide>
+        <div class="picsum-img-wrapper">
+            <img [src]="images[1]" alt="Joker 2019" class="img img-fluid w-100">
+        </div>
+    </ng-template>
+    <ng-template ngbSlide>
+        <div class="picsum-img-wrapper">
+            <img [src]="images[2]" alt="Endgame" class="img img-fluid w-100">
+        </div>
+    </ng-template>
+</ngb-carousel>
+<!-- End Carousel -->
+
+<!-- Begin Content -->
+<div class="container">
+    <h4 class="mt-4 mb-3 text-center font-weight-bold">ĐẶT VÉ NHANH</h4>
+
+    <!-- Begin Fast Booking -->
+    <div class="bg-white pt-3 rounded fast-book">
+        <form [formGroup]="fastBookingForm">
+            <div class="row px-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <select class="form-control" (change)="showTheaters($event.target.value)" formControlName="sltSystem">
+                            <option value="" hidden>Hệ thống</option>
+                            <option *ngFor="let systemTheater of listSystemTheaters"
+                                [value]="systemTheater.maHeThongRap">
+                                {{ systemTheater.tenHeThongRap }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <select class="form-control" (change)="showFilmsOfTheater($event.target.value)" formControlName="sltTheater">
+                            <option value="" hidden>Rạp</option>
+                            <option *ngFor="let theater of listTheaters" [value]="theater.maCumRap">
+                                {{ theater.tenCumRap }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <select class="form-control" formControlName="sltFilm" (change)="showDate($event.target.value)">
+                            <option value="" hidden>Phim</option>
+                            <option *ngFor="let film of listFilmsOfTheater" [value]="film.maPhim">{{ film.tenPhim }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <select class="form-control" formControlName="sltDate" (change)="showShowTime($event.target.value)">
+                            <option value="" hidden>Ngày xem</option>
+                            <option *ngFor="let date of listDate" [value]="date">{{ date }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <select class="form-control" formControlName="sltTime" (change)="setShowTimeID($event.target.value)">
+                            <option value="" hidden>Suất chiếu</option>
+                            <option *ngFor="let time of listTime" [value]="time.showTimeID">{{ time.time }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <button type="button" class="btn btn-warning w-100" [routerLink]="['/ticket',showTimeID]">ĐẶT VÉ</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- End Fast Booking -->
+
+    <h4 class="mt-4 mb-3 text-center font-weight-bold">PHIM ĐANG CHIẾU</h4>
+
+    <!-- Showing and Upcoming Film -->
+
+    <ng-container *ngIf="!isMobile">
+        <ng-container *ngTemplateOutlet="SliderFilms"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="isMobile">
+        <ng-container *ngTemplateOutlet="SliderFilmsMobile"></ng-container>
+    </ng-container>
+
+    <!-- End Showing and Upcoming Film -->
+
+    <!-- Showtimes -->
+    <h4 class="mt-4 mb-3 text-center font-weight-bold" *ngIf="!isMobile">LỊCH CHIẾU</h4>
+    <!-- <div class="row bg-white py-4 border-bottom">
+        <div class="col-md-1 text-center small">
+            Hệ thống
+        </div>
+        <div class="col-md-5 text-center">
+            Rạp
+        </div>
+        <div class="col-md-3 text-center">
+            Phim
+        </div>
+        <div class="col-md-3 text-center">
+            Suất chiếu
+        </div>
+    </div> -->
+    <div class="row bg-white px-3" *ngIf="!isMobile">
+        <div class="col-md-1 pr-4 border-right">
+            <ng-container *ngFor="let system of listSystemTheaters; let last = last; let first = first">
+                <img [src]="system.logo" [alt]="system.tenHeThongRap" class="img img-fluid w-100" [ngClass]="{'mt-4': first, 'mb-4': last}" (click)="showTheaters(system.maHeThongRap, 1)">
+                <hr *ngIf="!last">
+            </ng-container>
+
+        </div>
+        <div class="col-md-5 border-right">
+            <ng-container *ngFor="let theater of listTheaters; let last = last; let first = first">
+                <div class="theater" (click)="showFilmsOfTheater(theater.maCumRap, 1)" [ngClass]="{'mt-4': first, 'mb-4': last}">
+                    <h6 class="font-weight-bold"> {{theater.tenCumRap}}
+                    </h6>
+                    <h6>{{theater.diaChi}}</h6>
+                    <hr *ngIf="!last">
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-md-3 border-right">
+            <ng-container *ngFor="let film of listFilmsOfTheater; let last = last; let first = first">
+                <div class="theater" (click)="showShowTime(film.maPhim, 1)" [ngClass]="{'mt-4': first, 'mb-4': last}">
+                    <h6 class="font-weight-bold"> {{film.tenPhim}}
+                    </h6>
+                    <hr *ngIf="!last">
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-md-3">
+            <ng-container *ngFor="let showTime of listShowTimeOfFilm; let last = last; let first = first">
+                <div class="theater" [ngClass]="{'mt-4': first, 'mb-4': last}">
+                    <h6 class="font-weight-bold"> {{showTime}}
+                    </h6>
+                    <hr *ngIf="!last">
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <!-- End Showtimes -->
+</div>
+<!-- End Content -->
+
+
+<!-- Template -->
+<ng-template #SliderFilms>
+    <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+        <div ngxSlickItem *ngFor="let film of listFilms" class="slide px-2 hvr-float">
+            <div class="film animate flip" [routerLink]="['/detail',film.maPhim]">
+                <img [src]="film.hinhAnh" alt="{{film.tenPhim}}" class="img img-fluid film-img w-100">
+                <div class="film-body">
+                    <div class="film-title px-3 pt-2 pb-0">{{film.tenPhim}}</div>
+                    <div class="film-rate px-3 pb-2 pt-0">
+                        <ngb-rating [rate]="film.danhGia"></ngb-rating>
+                    </div>
+                </div>
+                <div class="overlay">
+
+                </div>
+            </div>
+        </div>
+    </ngx-slick-carousel>
+</ng-template>
+
+
+<ng-template #SliderFilmsMobile>
+    <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfigMobile">
+        <div ngxSlickItem *ngFor="let film of listFilms" class="slide px-2 hvr-float">
+            <div class="film animate flip mx-3" [routerLink]="['/detail',film.maPhim]">
+                <img [src]="film.hinhAnh" alt="{{film.tenPhim}}" class="img img-fluid film-img-mobile w-100">
+                <div class="film-body">
+                    <div class="film-title-mobile px-3 pt-2 pb-0">{{film.tenPhim}}</div>
+                    <div class="film-rate px-3 pb-2 pt-0">
+                        <ngb-rating [rate]="film.danhGia"></ngb-rating>
+                    </div>
+                </div>
+                <div class="overlay">
+
+                </div>
+            </div>
+        </div>
+    </ngx-slick-carousel>
+</ng-template>

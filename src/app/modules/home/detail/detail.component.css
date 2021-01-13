@@ -1,0 +1,130 @@
+ul{
+    padding:  0px;
+}
+ul li {
+    list-style: none;
+    padding:  0px;
+}
+.w100{
+    width: 100%;
+}
+
+h2 {
+    font-size: 18px;
+    margin-bottom: 40px;
+    letter-spacing: 1.7px;
+    text-transform: uppercase;
+    color: #ec7532;
+}
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.4em;
+    position: relative;
+    margin: 0 0 10px;
+    padding: 0 0 20px;
+    border-bottom: 1px solid #d8d8d8;
+}
+h2:after, h3:after, h4:after, h5:after {
+    position: absolute;
+    right: auto;
+    bottom: -1px;
+    display: block;
+    width: 125px;
+    height: 4px;
+    content: '';
+    background-image: linear-gradient(to right,#fbbd61,#ec7532);
+}
+h2.no-underline, h3.no-underline, h4.no-underline, h5.no-underline {
+    padding: 0;
+    border-bottom: none;
+}
+h2.no-underline:after, h3.no-underline:after, h4.no-underline:after, h5.no-underline:after {
+    display: none;
+}
+
+.dark{
+    position: relative;
+    color: #fff;
+    background: #101010;
+}
+.section{
+    padding-top: 75px;
+    padding-bottom: 75px;
+}
+.single-movie .poster {
+    display: block;
+    margin: 0 auto 25px;
+    border-radius: 10px;
+}
+.single-movie img{
+    width: 100%;
+}
+ul.movie-info li i {
+    font-size: 12px;
+    font-style: normal;
+    display: inline-block;
+    width: 115px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #4a4a4a;
+}
+.single-movie .poster {
+    display: block;
+    margin: 0 auto 25px;
+    border-radius: 10px;
+}
+.share {
+    margin-bottom: 25px;
+    text-align: center;
+}
+.share a {
+    line-height: 40px;
+    display: inline-block;
+    width: 43px;
+    height: 43px;
+    margin: 0 2px;
+    text-align: center;
+    border: solid 2px #d8d8d8;
+    border-radius: 50%;
+}
+
+a, a:active, a:visited {
+    cursor: pointer;
+    -webkit-transition: all 300ms ease-in-out;
+    -moz-transition: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
+    text-decoration: none;
+    color: #ec7532;
+    outline: none;
+    box-shadow: none;
+}
+ul.show-times li .time.past {
+    opacity: .5;
+}
+
+
+ul.show-times li {
+    display: table;
+    margin-bottom: 10px;
+
+}
+
+ul.show-times li i {
+    font-size: 12px;
+    font-style: normal;
+    display: table-cell;
+    width: 85px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #4a4a4a;
+
+}
+ul.show-times li .time {
+    font-size: 14px;
+    display: inline-block;
+    margin: 0 5px 5px 0;
+    padding: 7px 10px;
+    letter-spacing: 2px;
+    color: #717171;
+    border-radius: 5px;
+    background-color: #d8d8d8;
+}

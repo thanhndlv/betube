@@ -1,0 +1,122 @@
+<h4 class="font-weight-bold mb-4">Quản lý lịch chiếu</h4>
+<button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#showTimeModal" (click)="setUpAddShowTime()">
+  <i class="fas fa-calendar-alt"></i> Thêm mới
+</button>
+<div class="form-group col-md-4 px-0" *ngIf="listSystemTheaters">
+    <label for="">Chọn hệ thống rạp</label>
+    <select class="custom-select" name="" id="" (change)="showTheaters($event.target.value)">
+    <option value="" hidden>--- Chọn đê ---</option>
+    <option *ngFor="let system of listSystemTheaters" [value]="system.maHeThongRap">{{system.tenHeThongRap}}</option>
+  </select>
+</div>
+<div class="form-group col-md-4 px-0" *ngIf="listTheater">
+    <label for="">Chọn cụm rạp</label>
+    <select class="custom-select" name="" id="" (change)="showShowTimes($event.target.value)">
+    <option value="" hidden>--- Chọn đê ---</option>
+    <option *ngFor="let theater of listTheater" [value]="theater.maCumRap">{{theater.tenCumRap}}</option>
+  </select>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Mã lịch chiếu</th>
+                <th>Mã rạp</th>
+                <th>Ngày giờ chiếu</th>
+                <th>Giá vé</th>
+                <th>Thời lượng</th>
+                <th>Tùy chọn</th>
+            </tr>
+        </thead>
+        <tbody *ngIf="listShowTime">
+            <tr *ngFor="let showTime of listShowTime">
+                <td>{{showTime.maLichChieu}}</td>
+                <td>{{showTime.maRap}}</td>
+                <td>{{showTime.ngayChieuGioChieu}}</td>
+                <td>{{showTime.giaVe}}</td>
+                <td>{{showTime.thoiLuong}}</td>
+                <td>Hi</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div id="showTimeModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold" id="exampleModalLabel">
+                    Tạo lịch chiếu
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <div class="sign-up-form text-left bg-white">
+                    <form [formGroup]="addShowTimeForm">
+                        <div class="form-group">
+                            <label for="">Ngày chiếu</label>
+
+                            <div class="input-group">
+                                <input class="form-control" name="dp" ngbDatepicker #d="ngbDatepicker" formControlName="date" />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">
+                    <i class="fas fa-calendar-alt"></i>
+                  </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Giờ chiếu</label>
+                            <ngb-timepicker formControlName="time"></ngb-timepicker>
+                        </div>
+                        <div class="form-group" *ngIf="listSystemTheaters">
+                            <label for="">Chọn hệ thống rạp</label>
+                            <select class="custom-select" name="" id="" (change)="showTheatersAdd($event.target.value)">
+                <option value="" hidden>--- Chọn đê ---</option>
+                <option *ngFor="let system of listSystemTheaters" [value]="system.maHeThongRap">{{system.tenHeThongRap}}
+                </option>
+              </select>
+                        </div>
+                        <div class="form-group" *ngIf="listTheater">
+                            <label for="">Chọn cụm rạp</label>
+                            <select class="custom-select" name="" id="" (change)="showRoomsAdd($event.target.value)">
+                <option value="" hidden>--- Chọn đê ---</option>
+                <option *ngFor="let theater of listTheater" [value]="theater.maCumRap">{{theater.tenCumRap}}</option>
+              </select>
+                        </div>
+                        <div class="form-group" *ngIf="listRoom">
+                            <label for="">Chọn rạp</label>
+                            <select class="custom-select" formControlName="theaterID">
+                <option value="" hidden>--- Chọn đê ---</option>
+                <option *ngFor="let room of listRoom" [value]="room.maRap">{{room.tenRap}}</option>
+              </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Giá vé</label>
+                            <!-- Nếu class 'is-invalid' được sử dụng thì class 'invalid-feedback' cũng sẽ hiển thị theo, phần này bootstrap đã hỗ trợ sẵn -->
+                            <input type="text" class="form-control" formControlName="ticketPrice" [ngClass]="{
+                  'is-invalid':
+                    (addShowTimeForm.get('ticketPrice').touched ||
+                      addShowTimeForm.get('ticketPrice').dirty) &&
+                    addShowTimeForm.get('ticketPrice').invalid
+                }" />
+                            <div class="invalid-feedback">
+                                Giá vé không hợp lệ
+                            </div>
+                        </div>
+                        <!-- Nếu các field của Form không hợp lệ thì disable nút Lưu thông tin đi -->
+                        <button type="submit" [disabled]="addShowTimeForm.invalid" class="btn btn-success w-100" (click)="addShowTime()">
+              Lưu thông tin
+            </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hiển thị thông báo sau khi thêm lịch chiếu thành công -->
+<button id="showAlertAddSuccess" class="d-none" [swal]="['Thật tuyệt vời!', 'Bạn đã thêm thành công lịch chiếu mới', 'success']"></button>

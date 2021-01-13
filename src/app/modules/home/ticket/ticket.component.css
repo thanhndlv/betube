@@ -1,0 +1,51 @@
+.seat,
+.vip-seat,
+.seat-booked {
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    border-radius: 3px;
+    margin: 3px;
+    cursor: pointer;
+}
+
+.seat-mobile,
+.vip-seat-mobile,
+.seat-booked-mobile {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    border-radius: 3px;
+    margin: 3px;
+    cursor: pointer;
+}
+
+.vip-seat,
+.vip-seat-mobile {
+    background-color: #007bff;
+}
+
+.seat,
+.seat-mobile {
+    background-color: #3e515d;
+}
+
+.seat-booked,
+.seat-booked-mobile {
+    background-color: #dddddd;
+}
+
+.loading {
+    min-height: 100%;
+    text-align: center;
+    position: relative;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #3e515d;
+}

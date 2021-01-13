@@ -1,0 +1,330 @@
+<h4 class="font-weight-bold mb-4">Quản lý người dùng</h4>
+<div class="mb-3 row" *ngIf="!isMobile">
+    <div class="col-md-2">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" (click)="setUpAddUser()"><i
+        class="fas fa-user-plus"></i> Thêm mới</button>
+    </div>
+    <div class="col-md-10 pr-0">
+        <form class="form-inline float-right">
+            <div class="form-group">
+                <label for="searchUser">Tìm kiếm</label>
+                <input [(ngModel)]="inputSearchUser" name="searchUser" type="text" id="searchUser" class="form-control mx-sm-3" (keyup)="searchUser()">
+            </div>
+        </form>
+    </div>
+</div>
+<div class="mb-3" *ngIf="isMobile">
+    <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#myModal" (click)="setUpAddUser()"><i
+        class="fas fa-user-plus"></i> Thêm mới</button>
+    <form class="form-inline">
+        <div class="form-group">
+            <label for="searchUser">Tìm kiếm</label>
+            <input [(ngModel)]="inputSearchUser" name="searchUser" type="text" id="searchUser" class="form-control mx-sm-3" (keyup)="searchUser()">
+        </div>
+    </form>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered" *ngIf="listUser && inputSearchUser==''">
+        <thead>
+            <tr>
+                <th>Họ tên</th>
+                <th>Tài khoản</th>
+                <th>Loại</th>
+                <th>Điện thoại</th>
+                <th>Tùy chọn</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of listUser.items">
+                <td>{{ user.hoTen }}</td>
+                <td>{{ user.taiKhoan }}</td>
+                <td>{{ user.maLoaiNguoiDung }}</td>
+                <td>{{ user.soDt }}</td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary mr-2 btn-sm" data-toggle="modal" data-target="#myModal" (click)="editUser(user.taiKhoan)"><i class="fas fa-user-edit"></i>
+                          <span *ngIf="!isMobile">Sửa</span></button>
+                        <button type="button" class="btn btn-danger btn-sm" (click)="setUserDelete(user.taiKhoan)" [swal]="deleteSwal"><i class="fas fa-user-times"></i> <span *ngIf="!isMobile">Xóa</span></button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-striped table-bordered" *ngIf="searchResult && inputSearchUser!=''">
+        <thead>
+            <tr>
+                <th>Họ tên</th>
+                <th>Tài khoản</th>
+                <th>Loại</th>
+                <th>Điện thoại</th>
+                <th>Tùy chọn</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of searchResult">
+                <td>{{ user.hoTen }}</td>
+                <td>{{ user.taiKhoan }}</td>
+                <td>{{ user.maLoaiNguoiDung }}</td>
+                <td>{{ user.soDt }}</td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary mr-2 btn-sm" data-toggle="modal" data-target="#myModal" (click)="editUser(user.taiKhoan)"><i class="fas fa-user-edit"></i>
+                          <span *ngIf="!isMobile">Sửa</span></button>
+                        <button type="button" class="btn btn-danger btn-sm" (click)="setUserDelete(user.taiKhoan)" [swal]="deleteSwal"><i class="fas fa-user-times"></i> <span *ngIf="!isMobile">Xóa</span></button>
+                    </div>
+                </td>
+            </tr>
+            <tr *ngIf="searchResult.length == 0">
+                <td colspan="5" class="text-center">Không tìm thấy người dùng</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Xử lý phân trang -->
+<nav aria-label="Page navigation example" *ngIf="listUser && inputSearchUser==''">
+    <ul class="pagination justify-content-center mb-0 pb-3">
+        <li class="page-item" [ngClass]="{'disabled': listUser && (listUser.currentPage == 1)}">
+            <a class="page-link" href="javascript:void(0)" (click)="previous()">Trang trước</a>
+        </li>
+        <!-- Nếu tổng số trang <= 7 thì không cần điều chỉnh chỉ việc show ra tất cả, ở đây dùng hàm counter() để biến tổng số trang thành mảng hỗ trợ dùng ngFor -->
+        <ng-container *ngIf="listUser && listUser.totalPages < 8">
+            <li [ngClass]="{'active': (i + 1) == listUser.currentPage}" class="page-item" *ngFor="let number of counter(listUser.totalPages); let i = index">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(i + 1)">{{ i + 1 }}</a>
+            </li>
+        </ng-container>
+
+        <!-- Nếu số trang lớn hơn 7 và trang hiện tại nhỏ hơn 5 thì lúc này phân trang có dạng 1,2,3,4,5,...,tổng -->
+        <ng-container *ngIf="listUser && listUser.totalPages > 7 && listUser.currentPage < 5">
+            <li class="page-item" [ngClass]="{'active': (i + 1) == listUser.currentPage}" *ngFor="let number of counter(5); let i = index">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(i + 1)">{{ i + 1 }}</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0)">...</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(listUser.totalPages)">{{
+          listUser.totalPages
+        }}</a>
+            </li>
+        </ng-container>
+
+        <!-- Nếu số trang lớn hơn 7 và trang hiện tại đang >=5 và < tổng - 3 lúc này phân trang sẽ có dạng 1,...,hiện tại - 1, hiện tại, hiện tại + 1,..., tổng -->
+        <ng-container *ngIf="
+        listUser &&
+        listUser.totalPages > 7 &&
+        listUser.currentPage > 4 &&
+        listUser.currentPage < listUser.totalPages - 3
+      ">
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(1)">1</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0)">...</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(listUser.currentPage - 1)">{{
+          listUser.currentPage - 1
+        }}</a>
+            </li>
+            <li class="page-item" [ngClass]="{'active': listUser.currentPage == listUser.currentPage}">
+                <a class="page-link" href="javascript:void(0)">{{ listUser.currentPage }}</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(listUser.currentPage + 1)">{{
+          listUser.currentPage + 1
+        }}</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0)">...</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(listUser.totalPages)">{{
+          listUser.totalPages
+        }}</a>
+            </li>
+        </ng-container>
+
+        <!-- Nếu số trang lớn hơn 7 và trang hiện tại > tổng - 4 thì lúc này phân trang sẽ có dạng 1, ..., tổng - 4 -> tổng -->
+        <ng-container *ngIf="
+        listUser &&
+        listUser.totalPages > 7 &&
+        listUser.currentPage > listUser.totalPages - 4
+      ">
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(1)">1</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="javascript:void(0)">...</a>
+            </li>
+            <li class="page-item" [ngClass]="{'active': listUser.currentPage == listUser.totalPages - 4}">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(listUser.totalPages - 4)">{{
+          listUser.totalPages - 4
+        }}</a>
+            </li>
+            <li class="page-item" [ngClass]="{'active': listUser.currentPage == listUser.totalPages - 3}">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(listUser.totalPages - 3)">{{
+          listUser.totalPages - 3
+        }}</a>
+            </li>
+            <li class="page-item" [ngClass]="{'active': listUser.currentPage == listUser.totalPages - 2}">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(listUser.totalPages - 2)">{{
+          listUser.totalPages - 2
+        }}</a>
+            </li>
+            <li class="page-item" [ngClass]="{'active': listUser.currentPage == listUser.totalPages - 1}">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(listUser.totalPages - 1)">{{
+          listUser.totalPages - 1
+        }}</a>
+            </li>
+            <li class="page-item" [ngClass]="{'active': listUser.totalPages == listUser.currentPage}">
+                <a class="page-link" href="javascript:void(0)" (click)="getPage(listUser.totalPages)">{{
+          listUser.totalPages
+        }}</a>
+            </li>
+        </ng-container>
+        <li class="page-item" [ngClass]="{'disabled': listUser && (listUser.currentPage == listUser.totalPages)}">
+            <a class="page-link" href="javascript:void(0)" (click)="next()">Trang sau</a>
+        </li>
+    </ul>
+</nav>
+<!-- End Xử lý phân trang -->
+
+<!-- Modal form thêm mới và sửa thông tin người dùng -->
+<div id="myModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold" id="exampleModalLabel">{{formTitle}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger mb-3" role="alert" *ngIf="error">
+                    {{ error }}
+                </div>
+                <div class="sign-up-form text-left bg-white">
+                    <form [formGroup]="addUserForm">
+                        <div class="form-group">
+                            <label for="">Họ tên</label>
+                            <!-- Nếu class 'is-invalid' được sử dụng thì class 'invalid-feedback' cũng sẽ hiển thị theo, phần này bootstrap đã hỗ trợ sẵn -->
+                            <input type="text" class="form-control" formControlName="fullName" [ngClass]="{
+                      'is-invalid':
+                        (addUserForm.get('fullName').touched ||
+                          addUserForm.get('fullName').dirty) &&
+                        addUserForm.get('fullName').invalid
+                    }" />
+                            <div class="invalid-feedback">
+                                Họ và tên không hợp lệ
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="">Tài khoản</label>
+                                <input [readonly]="isEdit" type="text" class="form-control" formControlName="userName" [ngClass]="{
+                        'is-invalid':
+                          (addUserForm.get('userName').touched ||
+                            addUserForm.get('userName').dirty) &&
+                          addUserForm.get('userName').invalid
+                      }" />
+                                <div class="invalid-feedback">
+                                    Tài khoản không hợp lệ
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="">Số điện thoại</label>
+                                <input type="text" class="form-control" formControlName="phoneNumber" [ngClass]="{
+                        'is-invalid':
+                          (addUserForm.get('phoneNumber').touched ||
+                            addUserForm.get('phoneNumber').dirty) &&
+                          addUserForm.get('phoneNumber').invalid
+                      }" />
+                                <div class="invalid-feedback">
+                                    Số điện thoại không hợp lệ
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="radioCustomer" value="KhachHang" class="custom-control-input" formControlName="userType">
+                                    <label class="custom-control-label" for="radioCustomer">Khách hàng</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="radioAdmin" value="QuanTri" class="custom-control-input" formControlName="userType">
+                                    <label class="custom-control-label" for="radioAdmin">Quản trị</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="">Mật khẩu</label>
+                                <input type="password" class="form-control" formControlName="password" (keyup)="comparePassword($event.target.value)" [ngClass]="{
+                        'is-invalid':
+                          (addUserForm.get('password').touched ||
+                            addUserForm.get('password').dirty) &&
+                          addUserForm.get('password').invalid
+                      }" />
+                                <div class="invalid-feedback">
+                                    Mật khẩu không hợp lệ
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="">Nhập lại mật khẩu</label>
+                                <input type="password" class="form-control" formControlName="passwordConfirm" (keyup)="comparePassword($event.target.value, 'fasle')" [ngClass]="{
+                        'is-invalid':
+                          (addUserForm.get('passwordConfirm').touched ||
+                            addUserForm.get('passwordConfirm').dirty) &&
+                          (addUserForm.get('passwordConfirm').invalid || !isEqual)
+                      }" />
+                                <div class="invalid-feedback">
+                                    Mật khẩu không hợp lệ
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Email</label>
+                            <input type="text" class="form-control" formControlName="email" [ngClass]="{
+                      'is-invalid':
+                        (addUserForm.get('email').touched ||
+                          addUserForm.get('email').dirty) &&
+                        addUserForm.get('email').invalid
+                    }" />
+                            <div class="invalid-feedback">
+                                Email không hợp lệ
+                            </div>
+                        </div>
+
+                        <!-- Nếu các field của Form không hợp lệ thì disable nút Lưu thông tin đi -->
+                        <button *ngIf="!isEdit" type="submit" [disabled]="addUserForm.invalid" class="btn btn-success w-100" (click)="addUser()">
+              Lưu thông tin
+            </button>
+                        <button *ngIf="isEdit" type="submit" [disabled]="addUserForm.invalid" class="btn btn-success w-100" (click)="confirmEdit()">
+              Lưu thông tin
+            </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal form thêm mới và sửa thông tin người dùng -->
+
+<!-- Hiển thị modal để xác nhận có xóa hay không sau khi click vào xóa người dùng -->
+<swal #deleteSwal title="Xóa người dùng" text="Bạn có chắc muốn xóa người dùng này không?" icon="question" cancelButtonText="Hủy" [showCancelButton]="true" [focusCancel]="true" (confirm)="deleteUser()">
+</swal>
+
+<!-- Hiển thị thông báo sau khi xóa người dùng thành công -->
+<button id="showAlertDeleteSuccess" class="d-none" [swal]="['Thật tuyệt vời!', 'Bạn đã xóa người dùng thành công', 'success']">
+</button>
+
+<!-- Hiển thị thông báo sau khi thêm người dùng thành công -->
+<button id="showAlertAddSuccess" class="d-none" [swal]="['Thật tuyệt vời!', 'Bạn đã thêm thành công người dùng mới', 'success']">
+</button>
+
+<!-- Hiển thị thông báo sau khi sửa người dùng thành công -->
+<button id="showAlertUpdateSuccess" class="d-none" [swal]="['Thật tuyệt vời!', 'Bạn đã cập nhật thông tin người dùng thành công', 'success']">
+</button>

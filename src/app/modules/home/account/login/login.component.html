@@ -1,0 +1,29 @@
+<div class="container text-center">
+  <img id="logo" [src]="logo" alt="" class="img img-fluid mt-4" routerLink="">
+  <h3 class="my-4">ĐĂNG NHẬP</h3>
+  <div class="alert alert-danger mb-3 small" role="alert" *ngIf="error">
+    {{error}}
+  </div>
+  <form [formGroup]="loginForm">
+    <div class="login-form text-left bg-white p-4">
+      <div class="form-group">
+        <label for="">Tài khoản</label>
+        <input type="text" class="form-control" formControlName="userName"
+          [ngClass]="{'is-invalid': (loginForm.get('userName').touched || loginForm.get('userName').dirty) && loginForm.get('userName').invalid}">
+        <div class="invalid-feedback">
+          Tài khoản không hợp lệ
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="">Mật khẩu</label>
+        <input type="password" class="form-control" formControlName="password"
+        [ngClass]="{'is-invalid': (loginForm.get('password').touched || loginForm.get('password').dirty) && loginForm.get('password').invalid}">
+        <div class="invalid-feedback">
+          Mật khẩu không hợp lệ
+      </div>
+      </div>
+      <button type="submit" [disabled]="loginForm.invalid" class="btn btn-info w-100" (click)="signIn()">Đăng nhập</button>
+    </div>
+  </form>
+
+</div>

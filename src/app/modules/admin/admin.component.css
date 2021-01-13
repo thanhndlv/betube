@@ -1,0 +1,14 @@
+#logo {
+    max-height: 70px;
+}
+
+.nav-mobile {
+    max-height: 50px;
+    min-height: 50px;
+    box-shadow: 0px 0 10px rgba(171, 171, 171, 0.8);
+}
+
+.nav-mobile .row {
+    transform: translate(0, 50%);
+    color: #3e515d;
+}

@@ -1,0 +1,81 @@
+<!-- <app-list-chair [dsGhe]="listChair" ></app-list-chair> -->
+<div class="container" *ngIf="!isLoading">
+    <div *ngIf="listSeat">
+        <div class="row">
+            <div class="col-md-8 mt-3 bg-white rounded" *ngIf="!isMobile">
+                <div class="d-flex justify-content-center">
+                    <div>
+                        <h5 class="text-center my-3">Màn hình</h5>
+                        <ng-container *ngFor="let seat of listSeat; let i = index">
+                            <span (click)="booking($event, seat)" [ngClass]="{'vip-seat':!seat.daDat && seat.loaiGhe == 'Vip', 'seat-booked': seat.daDat, 'seat' : !seat.daDat && seat.loaiGhe == 'Thuong'}" id="{{ seat.maGhe }}"></span>
+                            <br *ngIf="(i+1) %16 == 0">
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center my-3">
+                    <div>
+                        <span class="seat m-0"></span><span class="ml-1 mr-3">Ghế thường</span><span class="vip-seat m-0"></span><span class="ml-1 mr-3">Ghế VIP</span><span class="seat-booked m-0"></span><span class="ml-1 mr-3">Ghế đã đặt</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 mt-3" *ngIf="isMobile">
+                <div class="bg-white rounded">
+                    <div class="d-flex justify-content-center">
+                        <div>
+                            <h5 class="text-center my-3">Màn hình</h5>
+                            <ng-container *ngFor="let seat of listSeat; let i = index">
+                                <span (click)="booking($event, seat)" [ngClass]="{'vip-seat-mobile':!seat.daDat && seat.loaiGhe == 'Vip', 'seat-booked-mobile': seat.daDat, 'seat-mobile' : !seat.daDat && seat.loaiGhe == 'Thuong'}" id="{{ seat.maGhe }}"></span>
+                                <br *ngIf="(i+1) %16 == 0">
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center my-3 pb-3">
+                        <div>
+                            <span class="seat-mobile m-0"></span><span class="ml-1 mr-3">Ghế thường</span><span class="vip-seat-mobile m-0"></span><span class="ml-1 mr-3">Ghế VIP</span><span class="seat-booked-mobile m-0"></span><span class="ml-1 mr-3">Ghế đã đặt</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="booking-detail bg-white rounded my-3 p-3">
+                    <h1 class="text-danger">
+                        {{ totalAmount.toLocaleString() }} <u class="text-danger">đ</u>
+                    </h1>
+                    <hr />
+                    <div *ngIf="filmInfo">
+                        <h4 class="font-weight-bold">{{ filmInfo.tenPhim }}</h4>
+                        <h6>{{ filmInfo.tenCumRap }}</h6>
+                        <h6>{{ filmInfo.ngayChieu }} {{ filmInfo.gioChieu }}</h6>
+                    </div>
+                    <hr />
+                    <h4>Ghế</h4>
+                    <ng-container *ngFor="let ticket of listTicket">
+                        <span class="badge badge-success mr-2">{{ ticket.maGhe }}</span>
+                    </ng-container>
+                    <hr />
+                    <h4 class="font-weight-bold">Hình thức thanh toán</h4>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio1" name="payMethod" class="custom-control-input" value="momo" />
+                        <label class="custom-control-label" for="customRadio1">Momo</label>
+                    </div>
+                    <div class="custom-control custom-radio mt-2">
+                        <input type="radio" id="customRadio2" name="payMethod" class="custom-control-input" value="atm" />
+                        <label class="custom-control-label" for="customRadio2">Thẻ ATM nội địa</label>
+                    </div>
+                    <div class="custom-control custom-radio mt-2">
+                        <input type="radio" id="customRadio3" name="payMethod" class="custom-control-input" value="inter" />
+                        <label class="custom-control-label" for="customRadio3">Thẻ Visa/Master/JCB</label>
+                    </div>
+                    <button class="btn btn-primary btn-block mt-3" (click)="bookingTicket()" [disabled]="listTicket.length < 1">Đặt vé</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading" *ngIf="isLoading">
+    <i class="fas fa-spinner fa-spin fa-3x mb-2 mt-5"></i>
+    <h5>Đang tải...</h5>
+</div>
+
+<!-- Hiển thị thông báo sau khi đặt vé thành công -->
+<button id="showAlertAddSuccess" class="d-none" [swal]="['Thật tuyệt vời!', 'Bạn đã đặt vé thành công', 'success']"></button>

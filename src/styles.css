@@ -1,0 +1,11 @@
+/* You can add global styles to this file, and also import other style files */
+
+* {
+    font-family: 'Nunito', sans-serif;
+    /* color: #3e515d; */
+}
+
+body,
+html {
+    height: 100%;
+}

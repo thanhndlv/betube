@@ -1,0 +1,14 @@
+#logo{
+    max-height: 70px;
+    cursor: pointer;
+}
+
+.sign-up-form, .alert{
+    max-width: 500px;
+    margin: 0px auto;
+    /* border-radius: 15px; */
+}
+
+.h3{
+    color: #333;
+}

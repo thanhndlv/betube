@@ -1,0 +1,69 @@
+<div class="container text-center">
+    <img id="logo" [src]="logo" alt="" class="img img-fluid mt-4" routerLink="">
+    <h3 class="my-4">ĐĂNG KÝ TÀI KHOẢN</h3>
+    <div class="alert alert-danger mb-3 small" role="alert" *ngIf="error">
+        {{error}}
+    </div>
+    <div class="sign-up-form text-left bg-white p-5">
+        <form [formGroup]="signUpForm">
+            <div class="form-group">
+                <label for="">Họ tên</label>
+                <!-- Nếu class 'is-invalid' được sử dụng thì class 'invalid-feedback' cũng sẽ hiển thị theo, phần này bootstrap đã hỗ trợ sẵn -->
+                <input type="text" class="form-control" formControlName="fullName"
+                    [ngClass]="{'is-invalid': (signUpForm.get('fullName').touched || signUpForm.get('fullName').dirty) && signUpForm.get('fullName').invalid}">
+                <div class="invalid-feedback">
+                    Họ và tên không hợp lệ
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="">Tài khoản</label>
+                    <input type="text" class="form-control" formControlName="userName"
+                        [ngClass]="{'is-invalid': (signUpForm.get('userName').touched || signUpForm.get('userName').dirty) && signUpForm.get('userName').invalid}">
+                    <div class="invalid-feedback">
+                        Tài khoản không hợp lệ
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Số điện thoại</label>
+                    <input type="text" class="form-control" formControlName="phoneNumber"
+                        [ngClass]="{'is-invalid': (signUpForm.get('phoneNumber').touched || signUpForm.get('phoneNumber').dirty) && signUpForm.get('phoneNumber').invalid}">
+                    <div class="invalid-feedback">
+                        Số điện thoại không hợp lệ
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="">Mật khẩu</label>
+                    <input type="password" class="form-control" formControlName="password"
+                        (keyup)="comparePassword($event.target.value)"
+                        [ngClass]="{'is-invalid': (signUpForm.get('password').touched || signUpForm.get('password').dirty) && signUpForm.get('password').invalid}">
+                    <div class="invalid-feedback">
+                        Mật khẩu không hợp lệ
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Nhập lại mật khẩu</label>
+                    <input type="password" class="form-control" formControlName="passwordConfirm"
+                        (keyup)="comparePassword($event.target.value, 'fasle')"
+                        [ngClass]="{'is-invalid': (signUpForm.get('passwordConfirm').touched || signUpForm.get('passwordConfirm').dirty) && (signUpForm.get('passwordConfirm').invalid || !isEqual) }">
+                    <div class="invalid-feedback">
+                        Mật khẩu không hợp lệ
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="">Email</label>
+                <input type="text" class="form-control" formControlName="email"
+                    [ngClass]="{'is-invalid': (signUpForm.get('email').touched || signUpForm.get('email').dirty) && signUpForm.get('email').invalid}">
+                <div class="invalid-feedback">
+                    Email không hợp lệ
+                </div>
+            </div>
+
+            <!-- Nếu các field của Form không hợp lệ thì disable nút đăng ký đi -->
+            <button type="submit" [disabled]="signUpForm.invalid" class="btn btn-info w-100" (click)="signUp()">Đăng ký</button>
+        </form>
+    </div>
+</div>

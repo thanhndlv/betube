@@ -1,0 +1,110 @@
+<div class="loading h-100 text-center" *ngIf="isLoading">
+    <i class="fas fa-spinner fa-spin fa-3x mb-2 mt-5"></i>
+    <h5>Đang tải...</h5>
+</div>
+<div class="container" *ngIf="!isLoading">
+    <div class="row">
+        <div class="col-md-6 mt-5">
+            <span class="anchor" id="formUserEdit"></span>
+            <!-- form user info -->
+            <div class="card card-outline-secondary">
+                <div class="card-header">
+                    <h3 class="mb-0">Thông tin cá nhân</h3>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="userForm" *ngIf="user">
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">Tài khoản</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="text" readonly formControlName="userName">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">Họ và tên</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="text" formControlName="fullName">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">Email</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="email" formControlName="email">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">Số điện thoại</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="text" formControlName="phoneNumber">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">Mật khẩu</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="text" formControlName="password">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label"></label>
+                            <div class="col-lg-9">
+                                <input type="button" class="btn btn-primary" value="Chỉnh sửa thông tin" (click)="updateInfo()">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /form user info -->
+
+        </div>
+        <div class="col-md-6 mt-5">
+            <span class="anchor" id="formUserEdit"></span>
+            <!-- form user info -->
+            <div class="card card-outline-secondary">
+                <div class="card-header">
+                    <h3 class="mb-0">Lịch sử đặt vé</h3>
+                </div>
+                <div class="card-body">
+                    <div *ngIf="bookingHistory">
+                        <ng-container *ngFor="let his of bookingHistory; let last = last; let i = index">
+                            <h5 class="font-weight-bold">{{his.tenPhim}}</h5>
+                            <h6>Ngày đặt: {{his.ngayDat}}</h6>
+                            <button (click)="showModal(i)" data-toggle="modal" data-target="#ticketModal" class="btn btn-sm btn-primary">{{his.danhSachGhe.length}} ghế</button>
+                            <hr *ngIf="!last">
+                        </ng-container>
+
+                    </div>
+                    <h6 *ngIf="!bookingHistory">Không có dữ liệu</h6>
+                </div>
+            </div>
+            <!-- /form user info -->
+
+        </div>
+    </div>
+</div>
+
+<!-- Hiển thị thông báo sau khi cập nhật thành công -->
+<button id="showAlertAddSuccess" class="d-none" [swal]="['Thật tuyệt vời!', 'Bạn cập nhật thông tin thành công', 'success']"></button>
+
+<div id="ticketModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold" id="exampleModalLabel">
+                    Thông tin ghế ngồi
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <div class="sign-up-form text-left bg-white">
+                    <ng-container *ngFor="let seat of listSeat;let last = last">
+                        <h6 class="font-weight-bold">{{seat.tenHeThongRap}}</h6>
+                        <h6>{{seat.tenRap}}</h6>
+                        <h6>Ghế: {{seat.tenGhe}}</h6>
+                        <hr *ngIf="!last">
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
